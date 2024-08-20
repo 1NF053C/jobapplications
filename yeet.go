@@ -68,7 +68,7 @@ type AlignmentDetail struct {
 	Reason string `yaml:"reason"`
 }
 
-func processSubmittedApplicationsFile() string {
+func processSubmittedApplicationsFile() {
 	filepath := "./raw/submitted_applications.yaml"
 	yamlData, err := os.ReadFile(filepath)
 	if err != nil {
@@ -80,12 +80,14 @@ func processSubmittedApplicationsFile() string {
 		log.Fatalf("Error unmarshalling YAML: %v", err)
 	}
 
-	jsonBytes, err := json.Marshal(jobApplications)
+	jsonBytes, err := json.MarshalIndent(jobApplications, "", "    ")
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(1)
 	}
 
-	jsonString := string(jsonBytes)
-	return jsonString
+	outputJsonFilepath := "processed/json/submitted_applications.json"
+	if err := os.WriteFile(outputJsonFilepath, jsonBytes, 0644); err != nil {
+		log.Fatalf("Error writing to file %s", outputJsonFilepath)
+	}
 }
