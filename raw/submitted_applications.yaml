@@ -1,0 +1,51 @@
+- Company ABC:
+  submittedDate: "08/19/2024"
+  resume:
+    filename: 1-pager-2024-08-16.pdf
+    filepath: /home/a/projects/job-applications/resumes/pdf/1-pager-2024-08-16.pdf
+  coverLetter: null
+  role: Project Manager
+  level: Entry Level
+  skills:
+    - Go
+  location: ExampleCity, ExampleState
+  remote: true
+  contract: false
+  platform: linkedin
+  link: https://www.linkedin.com/jobs/view/#####/?refId=####&trackingId=####&trk=###&lipi=####
+  jobPostAndDescriptionAlignment:
+    companyTitle:
+      status: ok
+      reason: only listed once
+    jobTitle:
+        status: ok
+        reason: matches
+    requiredSkills:
+      status: poor
+      reason: much more required skills listed in description than on the job posting, and the main skill on job post is not listed in description
+
+- Company DEF:
+  submittedDate: "08/18/2024"
+  resume:
+    filename: 1-pager-2024-08-16.pdf
+    filepath: /home/a/projects/job-applications/resumes/pdf/1-pager-2024-08-16.pdf
+  coverLetter: null
+  role: Scrum Master
+  level: Intermediate Level
+  skills:
+    - Scrum Methodology
+  location: ExampleCity, ExampleState
+  remote: true
+  contract: false
+  platform: linkedin
+  link: https://www.linkedin.com/jobs/view/#####/?refId=####&trackingId=####&trk=###&lipi=####
+  jobPostAndDescriptionAlignment:
+    companyTitle:
+      status: ok
+      reason: only listed once
+    jobTitle:
+      status: ok
+      reason: matches
+    requiredSkills:
+      status: poor
+      reason: much more required skills listed in description than on the job posting, and the main skill on job post is not listed in description
