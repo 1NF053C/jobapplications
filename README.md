@@ -4,7 +4,7 @@ a golang program that reads a file with job application details to help me revie
 
 ## Getting Started
 ```sh
-git clone https://github.com/1NF053C/jobapplications.git
+git clone https://github.com/1NF053C/yeet.git
 # edit `submitted_applications.yaml` to add details about additional jobs applied to
 go run . process
 
