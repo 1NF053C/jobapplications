@@ -5,7 +5,8 @@
         "Role": "Project Manager",
         "Level": "Entry Level",
         "Skills": [
-            "Go"
+            "Go",
+            "Be Awesome"
         ],
         "Remote": true,
         "Contract": false,
@@ -38,7 +39,8 @@
         "Role": "Scrum Master",
         "Level": "Intermediate Level",
         "Skills": [
-            "Scrum Methodology"
+            "Scrum Methodology",
+            "Be Awesome"
         ],
         "Remote": true,
         "Contract": false,

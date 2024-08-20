@@ -8,6 +8,7 @@
   level: Entry Level
   skills:
     - Go
+    - Be Awesome
   location: ExampleCity, ExampleState
   remote: true
   contract: false
@@ -34,6 +35,7 @@
   level: Intermediate Level
   skills:
     - Scrum Methodology
+    - Be Awesome
   location: ExampleCity, ExampleState
   remote: true
   contract: false

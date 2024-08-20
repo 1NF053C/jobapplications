@@ -19,7 +19,76 @@ func condense(s string) string {
 }
 
 func TestProcessSubmittedApplicationsFileToJson(t *testing.T) {
-	EXPECTED_RESULT := condense(`[{"SubmittedDate":"08/19/2024","Location":"ExampleCity, ExampleState","Role":"Project Manager","Level":"Entry Level","Skills":["Go"],"Remote":true,"Contract":false,"ContractDuration":"","Platform":"linkedin","Resume":{"Filename":"1-pager-2024-08-16.pdf","Filepath":"/home/a/projects/job-applications/resumes/pdf/1-pager-2024-08-16.pdf"},"CoverLetter":null,"Link":"https://www.linkedin.com/jobs/view/#####/?refId=####\u0026trackingId=####\u0026trk=###\u0026lipi=####","JobPostAndDescriptionAlignment":{"CompanyTitle":{"Status":"ok","Reason":"only listed once"},"JobTitle":{"Status":"ok","Reason":"matches"},"RequiredSkills":{"Status":"poor","Reason":"much more required skills listed in description than on the job posting, and the main skill on job post is not listed in description"}}},{"SubmittedDate":"08/18/2024","Location":"ExampleCity, ExampleState","Role":"Scrum Master","Level":"Intermediate Level","Skills":["Scrum Methodology"],"Remote":true,"Contract":false,"ContractDuration":"","Platform":"linkedin","Resume":{"Filename":"1-pager-2024-08-16.pdf","Filepath":"/home/a/projects/job-applications/resumes/pdf/1-pager-2024-08-16.pdf"},"CoverLetter":null,"Link":"https://www.linkedin.com/jobs/view/#####/?refId=####\u0026trackingId=####\u0026trk=###\u0026lipi=####","JobPostAndDescriptionAlignment":{"CompanyTitle":{"Status":"ok","Reason":"only listed once"},"JobTitle":{"Status":"ok","Reason":"matches"},"RequiredSkills":{"Status":"poor","Reason":"much more required skills listed in description than on the job posting, and the main skill on job post is not listed in description"}}}]`)
+	EXPECTED_RESULT := condense(`[
+    {
+        "SubmittedDate": "08/19/2024",
+        "Location": "ExampleCity, ExampleState",
+        "Role": "Project Manager",
+        "Level": "Entry Level",
+        "Skills": [
+            "Go",
+            "Be Awesome"
+        ],
+        "Remote": true,
+        "Contract": false,
+        "ContractDuration": "",
+        "Platform": "linkedin",
+        "Resume": {
+            "Filename": "1-pager-2024-08-16.pdf",
+            "Filepath": "/home/a/projects/job-applications/resumes/pdf/1-pager-2024-08-16.pdf"
+        },
+        "CoverLetter": null,
+        "Link": "https://www.linkedin.com/jobs/view/#####/?refId=####\u0026trackingId=####\u0026trk=###\u0026lipi=####",
+        "JobPostAndDescriptionAlignment": {
+            "CompanyTitle": {
+                "Status": "ok",
+                "Reason": "only listed once"
+            },
+            "JobTitle": {
+                "Status": "ok",
+                "Reason": "matches"
+            },
+            "RequiredSkills": {
+                "Status": "poor",
+                "Reason": "much more required skills listed in description than on the job posting, and the main skill on job post is not listed in description"
+            }
+        }
+    },
+    {
+        "SubmittedDate": "08/18/2024",
+        "Location": "ExampleCity, ExampleState",
+        "Role": "Scrum Master",
+        "Level": "Intermediate Level",
+        "Skills": [
+            "Scrum Methodology",
+            "Be Awesome"
+        ],
+        "Remote": true,
+        "Contract": false,
+        "ContractDuration": "",
+        "Platform": "linkedin",
+        "Resume": {
+            "Filename": "1-pager-2024-08-16.pdf",
+            "Filepath": "/home/a/projects/job-applications/resumes/pdf/1-pager-2024-08-16.pdf"
+        },
+        "CoverLetter": null,
+        "Link": "https://www.linkedin.com/jobs/view/#####/?refId=####\u0026trackingId=####\u0026trk=###\u0026lipi=####",
+        "JobPostAndDescriptionAlignment": {
+            "CompanyTitle": {
+                "Status": "ok",
+                "Reason": "only listed once"
+            },
+            "JobTitle": {
+                "Status": "ok",
+                "Reason": "matches"
+            },
+            "RequiredSkills": {
+                "Status": "poor",
+                "Reason": "much more required skills listed in description than on the job posting, and the main skill on job post is not listed in description"
+            }
+        }
+    }
+]`)
 	processSubmittedApplicationsFile()
 	filepath := "./processed/json/submitted_applications.json"
 	filecontentbytes, err := os.ReadFile(filepath)
@@ -34,8 +103,8 @@ func TestProcessSubmittedApplicationsFileToJson(t *testing.T) {
 
 func TestProcessSubmittedApplicationsFileCsv(t *testing.T) {
 	EXPECTED_RESULT := `submitted_date,location,role,level,remote,contract,contract_duration,platform,cover_letter,link,skills
-08/19/2024,"ExampleCity, ExampleState",Project Manager,Entry Level,true,false,,linkedin,,https://www.linkedin.com/jobs/view/#####/?refId=####&trackingId=####&trk=###&lipi=####,Go
-08/18/2024,"ExampleCity, ExampleState",Scrum Master,Intermediate Level,true,false,,linkedin,,https://www.linkedin.com/jobs/view/#####/?refId=####&trackingId=####&trk=###&lipi=####,Scrum Methodology
+08/19/2024,"ExampleCity, ExampleState",Project Manager,Entry Level,true,false,,linkedin,,https://www.linkedin.com/jobs/view/#####/?refId=####&trackingId=####&trk=###&lipi=####,"Go, Be Awesome"
+08/18/2024,"ExampleCity, ExampleState",Scrum Master,Intermediate Level,true,false,,linkedin,,https://www.linkedin.com/jobs/view/#####/?refId=####&trackingId=####&trk=###&lipi=####,"Scrum Methodology, Be Awesome"
 `
 	processSubmittedApplicationsFile()
 	filepath := "./processed/csv/submitted_applications.csv"
