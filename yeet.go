@@ -1,3 +1,15 @@
+/*
+ * yeet.go
+ *
+ * Program that processes submitted job application details.
+ *
+ * Author: 1nf053c
+ * Created: 2024-08-20
+ * Last modified: 2024-08-20
+ *
+ * Version: 0.1
+ */
+
 package main
 
 import (
