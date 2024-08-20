@@ -1,6 +1,6 @@
 ## yeet
 
-a golang program that reads a file with job application details to help me review and share information about jobs that I apply to
+a golang program that reads a file with job application details for further analysis
 
 ## Getting Started
 ```sh
