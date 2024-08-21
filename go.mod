@@ -1,4 +1,4 @@
-module github.com/1nf053C/jobapplications
+module github.com/1nf053C/yeet
 
 go 1.23.0
 
