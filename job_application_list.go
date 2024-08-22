@@ -31,6 +31,8 @@ type JobApplication struct {
 
 type JobApplicationDetails struct {
 	SubmittedDate                  string        `yaml:"submittedDate"`
+	Status                         Status        `yaml:"status"`
+	Events                         []Event       `yaml:"events"`
 	Location                       string        `yaml:"location"`
 	Role                           string        `yaml:"role"`
 	Level                          string        `yaml:"level"`
@@ -43,6 +45,16 @@ type JobApplicationDetails struct {
 	CoverLetter                    interface{}   `yaml:"coverLetter"`
 	Link                           string        `yaml:"link"`
 	JobPostAndDescriptionAlignment AlignmentItem `yaml:"jobPostAndDescriptionAlignment"` // Nested struct, handled separately
+}
+
+type Status struct { // only status updates, not events like "I emailed the recruiter a follow-up"
+	Date        string `yaml:"date"`
+	Kind        string `yaml:"kind"`
+	Explanation string `yaml:"explanation"`
+}
+
+type Event struct {
+	Event Status `yaml:"event"`
 }
 
 type Resume struct {

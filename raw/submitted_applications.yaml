@@ -1,5 +1,26 @@
 - Company ABC:
     submittedDate: "08/19/2024"
+    status:
+      date: "08/22/2024"
+      kind: offer
+      explanation: after I followed up I was scheduled for a next day screening and then immediately extended an offer
+    events:
+      - event:
+          date: "08/19/2024"
+          kind: "submitted application"
+          explanation: "Filled out form on the hiring platform, clicked submit"
+      - event:
+          date: "08/20/2024"
+          kind: "follow-up"
+          explanation: "Emailed and called and left a message, the recruiter scheduled me in for a 30min screening"
+      - event:
+          date: "08/22/2024"
+          kind: "screening"
+          explanation: "Had screening call w/ team, they had me skip next round of interviewing and extended an offer"
+      - event:
+          date: "08/22/2024"
+          kind: "offer"
+          explanation: "Extended offer immediately after I demo'ed my portfolio of work"
     resume:
       filename: 1-pager-2024-08-16.pdf
       filepath: /home/a/projects/job-applications/resumes/pdf/1-pager-2024-08-16.pdf
@@ -19,14 +40,27 @@
         status: ok
         reason: only listed once
       jobTitle:
-          status: ok
-          reason: matches
+        status: ok
+        reason: matches
       requiredSkills:
         status: poor
         reason: much more required skills listed in description than on the job posting, and the main skill on job post is not listed in description
 
 - Company DEF:
-    submittedDate: "08/18/2024"
+    submittedDate: "08/11/2024"
+    status:
+      date: "08/22/2024"
+      kind: no response
+      explanation: I followed up on 08/18/2024 and am waiting to hear back
+    events:
+      - event:
+          date: "08/11/2024"
+          kind: "submitted application"
+          explanation: "Filled out form on the hiring platform, clicked submit"
+      - event:
+          date: "08/18/2024"
+          kind: "follow-up"
+          explanation: "Emailed and called and left a message for the recruiter"
     resume:
       filename: 1-pager-2024-08-16.pdf
       filepath: /home/a/projects/job-applications/resumes/pdf/1-pager-2024-08-16.pdf

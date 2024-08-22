@@ -3,6 +3,41 @@
         "CompanyTitle": "Company ABC",
         "Details": {
             "SubmittedDate": "08/19/2024",
+            "Status": {
+                "Date": "08/22/2024",
+                "Kind": "offer",
+                "Explanation": "after I followed up I was scheduled for a next day screening and then immediately extended an offer"
+            },
+            "Events": [
+                {
+                    "Event": {
+                        "Date": "08/19/2024",
+                        "Kind": "submitted application",
+                        "Explanation": "Filled out form on the hiring platform, clicked submit"
+                    }
+                },
+                {
+                    "Event": {
+                        "Date": "08/20/2024",
+                        "Kind": "follow-up",
+                        "Explanation": "Emailed and called and left a message, the recruiter scheduled me in for a 30min screening"
+                    }
+                },
+                {
+                    "Event": {
+                        "Date": "08/22/2024",
+                        "Kind": "screening",
+                        "Explanation": "Had screening call w/ team, they had me skip next round of interviewing and extended an offer"
+                    }
+                },
+                {
+                    "Event": {
+                        "Date": "08/22/2024",
+                        "Kind": "offer",
+                        "Explanation": "Extended offer immediately after I demo'ed my portfolio of work"
+                    }
+                }
+            ],
             "Location": "ExampleCity, ExampleState",
             "Role": "Project Manager",
             "Level": "Entry Level",
@@ -39,7 +74,28 @@
     {
         "CompanyTitle": "Company DEF",
         "Details": {
-            "SubmittedDate": "08/18/2024",
+            "SubmittedDate": "08/11/2024",
+            "Status": {
+                "Date": "08/22/2024",
+                "Kind": "no response",
+                "Explanation": "I followed up on 08/18/2024 and am waiting to hear back"
+            },
+            "Events": [
+                {
+                    "Event": {
+                        "Date": "08/11/2024",
+                        "Kind": "submitted application",
+                        "Explanation": "Filled out form on the hiring platform, clicked submit"
+                    }
+                },
+                {
+                    "Event": {
+                        "Date": "08/18/2024",
+                        "Kind": "follow-up",
+                        "Explanation": "Emailed and called and left a message for the recruiter"
+                    }
+                }
+            ],
             "Location": "ExampleCity, ExampleState",
             "Role": "Scrum Master",
             "Level": "Intermediate Level",
