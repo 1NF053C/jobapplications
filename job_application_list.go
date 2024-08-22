@@ -1,131 +1,143 @@
+/*
+ * job_application_list.go
+ *
+ * Code that defines a JobApplicationList and related funcs
+ *
+ * Author: 1nf053c
+ * Created: 2024-08-20
+ * Last modified: 2024-08-20
+ *
+ * Version: 0.1
+ */
+
 package main
 
 import (
 	"encoding/json"
-	"fmt"
+
 	"log"
 	"os"
-	"strings"
 
-	"github.com/jszwec/csvutil"
+	"github.com/gocarina/gocsv"
 	"gopkg.in/yaml.v3"
 )
 
 type JobApplicationList []JobApplication
-type JobApplicationListCsvEncodingReady []JobApplicationCsvEncodingReady
+
+type JobApplication struct {
+	CompanyTitle string
+	Details      JobApplicationDetails `yaml:"job_application_details"`
+}
+
+type JobApplicationDetails struct {
+	SubmittedDate                  string        `yaml:"submittedDate"`
+	Location                       string        `yaml:"location"`
+	Role                           string        `yaml:"role"`
+	Level                          string        `yaml:"level"`
+	Skills                         []string      `yaml:"skills"`
+	Remote                         bool          `yaml:"remote"`
+	Contract                       bool          `yaml:"contract,omitempty"`
+	ContractDuration               string        `yaml:"contractDuration,omitempty"`
+	Platform                       string        `yaml:"platform"`
+	Resume                         Resume        `yaml:"resume"` // Nested struct, handled separately
+	CoverLetter                    interface{}   `yaml:"coverLetter"`
+	Link                           string        `yaml:"link"`
+	JobPostAndDescriptionAlignment AlignmentItem `yaml:"jobPostAndDescriptionAlignment"` // Nested struct, handled separately
+}
+
+type Resume struct {
+	Filename string `yaml:"filename"`
+	Filepath string `yaml:"filepath"`
+}
+
+type AlignmentItem struct {
+	CompanyTitle   *AlignmentDetail `yaml:"companyTitle,omitempty"`
+	JobTitle       *AlignmentDetail `yaml:"jobTitle,omitempty"`
+	RequiredSkills *AlignmentDetail `yaml:"requiredSkills,omitempty"`
+}
+
+type AlignmentDetail struct {
+	Status string `yaml:"status"`
+	Reason string `yaml:"reason"`
+}
 
 func (j JobApplicationList) FromYamlFile(filepath string) JobApplicationList {
 	yamlData, err := os.ReadFile(filepath)
 	if err != nil {
-		fmt.Printf("Error reading file %s", filepath)
+		log.Fatalf("Error reading file %s", filepath)
+		os.Exit(1)
 	}
+
+	// What might be possible here, is that I can start by passing in a node of type JobApplicationList
+	// and then override the Unmarshal logic _for a specific kind_ of node during decoding
+	// e.g. I only override default decoding logic for JobApplication
 	var jobApplicationList JobApplicationList
-	if err := yaml.Unmarshal([]byte(yamlData), &jobApplicationList); err != nil {
+	if err := yaml.Unmarshal(yamlData, &jobApplicationList); err != nil {
 		log.Fatalf("Error unmarshalling YAML: %v", err)
+		os.Exit(1)
 	}
 	return jobApplicationList
 }
 
-func (j JobApplicationList) writeToJsonFile() {
+func (jal *JobApplicationList) UnmarshalYAML(value *yaml.Node) error {
+	// UnmarshalYAML will receive a SequenceNode for arrays
+	if value.Kind != yaml.SequenceNode {
+		log.Fatalf("expected a sequence node")
+		os.Exit(1)
+	}
+
+	// value.Content is the array element, it should be size 2 when two companies are in the list
+	// I have a company name as the key, and the value is another node
+	for _, item := range value.Content {
+		// item should be a MappingNode, which is a single key value pair
+		if item.Kind != yaml.MappingNode || len(item.Content) != 2 {
+			log.Fatalf("expected a mapping with a single key-value pair")
+			os.Exit(1)
+		}
+
+		// key is item.Content[0]
+		companyNode := item.Content[0]
+		// value is item.Content[1], which is the rest of the fields in JobApplication except CompanyTitle
+		detailsNode := item.Content[1]
+
+		var ja JobApplication
+		// CompanyTitle value can be taken from the key
+		ja.CompanyTitle = companyNode.Value
+
+		// no custom yaml unmarshallers should be needed for the rest of JobApplication
+		// so this Decode func should handle the rest and update ja
+		if err := detailsNode.Decode(&ja.Details); err != nil {
+			return err
+		}
+
+		// append each decoded JobApplicationDetails to this JobApplicationList
+		*jal = append(*jal, ja)
+	}
+
+	// success
+	return nil
+}
+
+func (j JobApplicationList) ToJson() []byte {
 	jsonBytes, err := json.MarshalIndent(j, "", "    ")
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
-	}
-	outputJsonFilepath := "processed/json/submitted_applications.json"
-	if err := os.WriteFile(outputJsonFilepath, jsonBytes, 0644); err != nil {
-		log.Fatalf("Error writing to file %s", outputJsonFilepath)
-	}
+	checkErr(err)
+	return jsonBytes
 }
 
-func (j JobApplicationList) writeToCsvFile() {
-	jobApplicationsCsvList := j.ToCsvEncodingReady()
-	csvBytes, err := csvutil.Marshal(jobApplicationsCsvList)
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
-	}
-	outputCsvFilepath := "processed/csv/submitted_applications.csv"
-	if err := os.WriteFile(outputCsvFilepath, csvBytes, 0644); err != nil {
-		log.Fatalf("Error writing to file %s", outputCsvFilepath)
-	}
+func (j JobApplicationList) WriteToJsonFile(filepath string) {
+	bytes := j.ToJson()
+	err := os.WriteFile(filepath, bytes, 0644)
+	checkErr(err)
 }
 
-func (jl JobApplicationList) ToCsvEncodingReady() JobApplicationListCsvEncodingReady {
-	jlCsvEncReady := make(JobApplicationListCsvEncodingReady, len(jl))
-	for i, j := range jl {
-		jlCsvEncReady[i] = j.ToCsvEncodingReady()
-	}
-	return jlCsvEncReady
+func (j JobApplicationList) ToCsv() string {
+	csvString, err := gocsv.MarshalString(&j)
+	checkErr(err)
+	return csvString
 }
 
-type JobApplicationCsvEncodingReady struct {
-	JobApplication
-	Details JobApplicationDetailsCsvEncodingReady `csv:"-"`
-}
-
-type JobApplicationDetailsCsvEncodingReady struct {
-	JobApplicationDetails
-	Skills string `csv:"skills"`
-}
-
-func (j JobApplication) ToCsvEncodingReady() JobApplicationCsvEncodingReady {
-	return JobApplicationCsvEncodingReady{
-		JobApplication: j,
-		Details:        j.Details.ToCsvEncodingReady(),
-	}
-}
-
-func (j JobApplicationDetails) ToCsvEncodingReady() JobApplicationDetailsCsvEncodingReady {
-	return JobApplicationDetailsCsvEncodingReady{
-		JobApplicationDetails: j,
-		Skills:                strings.Join(j.Skills, ", "),
-	}
-}
-
-type JobApplication struct {
-	CompanyTitle string                `csv:"company_title"`
-	Details      JobApplicationDetails `yaml:"-" csv:"-"`
-	// todo: try embedded struct here
-}
-
-type JobApplicationDetails struct {
-	SubmittedDate                  string        `yaml:"submittedDate" csv:"submitted_date"`
-	Location                       string        `yaml:"location" csv:"location"`
-	Role                           string        `yaml:"role" csv:"role"`
-	Level                          string        `yaml:"level" csv:"level"`
-	Skills                         []string      `yaml:"skills" csv:"-"`
-	Remote                         bool          `yaml:"remote" csv:"remote"`
-	Contract                       bool          `yaml:"contract,omitempty" csv:"contract"`
-	ContractDuration               string        `yaml:"contractDuration,omitempty" csv:"contract_duration"`
-	Platform                       string        `yaml:"platform" csv:"platform"`
-	Resume                         Resume        `yaml:"resume" csv:"-"` // Nested struct, handled separately
-	CoverLetter                    interface{}   `yaml:"coverLetter" csv:"cover_letter"`
-	Link                           string        `yaml:"link" csv:"link"`
-	JobPostAndDescriptionAlignment AlignmentItem `yaml:"jobPostAndDescriptionAlignment" csv:"-"` // Nested struct, handled separately
-}
-
-func (j *JobApplication) UnmarshalYAML(value *yaml.Node) error {
-	if value.Kind != yaml.MappingNode || len(value.Content) != 2 {
-		log.Fatal("expected a mapping node with two key-value pairs")
-		os.Exit(1)
-	}
-	j.CompanyTitle = value.Content[0].Value
-	return value.Content[1].Decode(&j.Details)
-}
-
-type Resume struct {
-	Filename string `yaml:"filename" csv:"resume_filename"`
-	Filepath string `yaml:"filepath" csv:"resume_filepath"`
-}
-
-type AlignmentItem struct {
-	CompanyTitle   *AlignmentDetail `yaml:"companyTitle,omitempty" csv:"company_title_status,company_title_reason"`
-	JobTitle       *AlignmentDetail `yaml:"jobTitle,omitempty" csv:"job_title_status,job_title_reason"`
-	RequiredSkills *AlignmentDetail `yaml:"requiredSkills,omitempty" csv:"required_skills_status,required_skills_reason"`
-}
-
-type AlignmentDetail struct {
-	Status string `yaml:"status" csv:"status"`
-	Reason string `yaml:"reason" csv:"reason"`
+func (j JobApplicationList) WriteToCsvFile(filepath string) {
+	csvString := j.ToCsv()
+	err := os.WriteFile(filepath, []byte(csvString), 0644)
+	checkErr(err)
 }

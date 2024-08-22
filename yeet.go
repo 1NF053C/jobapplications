@@ -14,7 +14,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"strings"
 )
 
 var ErrIncorrectNumberOfArgs = fmt.Errorf("incorrect number of args")
@@ -37,13 +39,30 @@ func processArgs(args []string) {
 		os.Exit(1)
 	}
 	if arg == "process" {
-		processSubmittedApplicationsFile()
+		processJobApplicationListFile()
 	}
 }
 
-func processSubmittedApplicationsFile() {
+func processJobApplicationListFile() {
 	yamlFilepath := "./raw/submitted_applications.yaml"
 	jobApplicationList := JobApplicationList{}.FromYamlFile(yamlFilepath)
-	jobApplicationList.writeToJsonFile()
-	jobApplicationList.writeToCsvFile()
+
+	// write job application list to a json file
+	outputJsonFilepath := "processed/json/submitted_applications.json"
+	jobApplicationList.WriteToJsonFile(outputJsonFilepath)
+
+	// write job application list to a csv file
+	outputCsvFilepath := "processed/csv/submitted_applications.csv"
+	jobApplicationList.WriteToCsvFile(outputCsvFilepath)
+}
+
+func checkErr(e error) {
+	if e != nil {
+		log.Fatalf("err: %s", e.Error())
+		os.Exit(1)
+	}
+}
+
+func condense(s string) string {
+	return strings.Join(strings.Fields(s), "")
 }
