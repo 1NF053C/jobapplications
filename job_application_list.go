@@ -68,9 +68,6 @@ func (j JobApplicationList) FromYamlFile(filepath string) JobApplicationList {
 		os.Exit(1)
 	}
 
-	// What might be possible here, is that I can start by passing in a node of type JobApplicationList
-	// and then override the Unmarshal logic _for a specific kind_ of node during decoding
-	// e.g. I only override default decoding logic for JobApplication
 	var jobApplicationList JobApplicationList
 	if err := yaml.Unmarshal(yamlData, &jobApplicationList); err != nil {
 		log.Fatalf("Error unmarshalling YAML: %v", err)
