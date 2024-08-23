@@ -1,7 +1,5 @@
 ## yeet
 
-test
-
 a golang program that reads a file with job application details for further analysis
 
 ## Getting Started
